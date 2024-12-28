@@ -1,34 +1,40 @@
 import { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TextInput, TouchableOpacity } from "react-native";
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, ScrollView } from "react-native";
 import { fetchArticles } from "@/utils/api";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { ScrollView } from "react-native";
+import { useRouter } from "expo-router";
 import ArticleCard from "@/components/Article/ArticleCard";
 
 const Index = () => {
   const router = useRouter();
   const [articles, setArticles] = useState([]);
-  
-  useEffect(()=>{
+  const [searchText, setSearchText] = useState('');
+
+  useEffect(() => {
     fetchArticles()
-    .then((data)=> {
-      setArticles(data);
-      console.log(data)})
-    .catch((error)=>console.error(error));
-  },[]);
+      .then((data) => {
+        if (Array.isArray(data)) {
+          setArticles(data);
+        } else {
+          console.error('Invalid data format');
+        }
+      })
+      .catch((error) => console.error(error));
+  }, []);
+
+  const filteredArticles = articles.filter(article =>
+    article.title.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.aboutButton}
           onPress={() => router.push("/about")}
         >
           <Text style={styles.aboutButtonText}>About</Text>
         </TouchableOpacity>
-      </View>
-      <View style={styles.header}>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.imageButton}
           onPress={() => router.push("/image")}
         >
@@ -38,16 +44,19 @@ const Index = () => {
       <ScrollView>
         <View style={styles.searchContainer}>
           <TextInput
-          style={styles.searchInput}
-          placeholder="Search ..."/>
+            style={styles.searchInput}
+            placeholder="Search ..."
+            value={searchText}
+            onChangeText={setSearchText}
+          />
         </View>
-        {articles.map((article)=>(
-          <ArticleCard key={article.id} article={article}></ArticleCard>
+        {filteredArticles.map((article) => (
+          <ArticleCard key={article.id} article={article} />
         ))}
       </ScrollView>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -58,7 +67,7 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#fff',
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-between', // Adjust layout of buttons
   },
   aboutButton: {
     backgroundColor: '#007AFF',
@@ -93,7 +102,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     paddingLeft: 10,
-    marginRight: 15,
   },
 });
 
