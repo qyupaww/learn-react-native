@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { registerUser } from '@/utils/api';
+import { register } from '@/utils/auth';
 
 const RegisterScreen = () => {
   const [name, setName] = useState('');
@@ -15,7 +15,7 @@ const RegisterScreen = () => {
       Alert.alert('Error', 'Please fill in all fields.');
     } else {
       try {
-        const response = await registerUser(name, username, email, password);
+        const response = await register(name, username, email, password);
         Alert.alert('Success', response.message || 'Account created successfully!');
         router.push('/login');
       } catch (error) {

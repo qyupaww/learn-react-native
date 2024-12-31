@@ -1,9 +1,33 @@
-import React from 'react';
-import { View, Text, StyleSheet, TextInput, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
+import { getToken, removeToken, getUsernameFromToken } from '@/utils/auth';
 
 const Navbar = () => {
+  const [jwtToken, setJwtToken] = useState(null);
+  const [username, setUsername] = useState('');
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const token = await getToken();
+      setJwtToken(token);
+
+      if (token) {
+        const fetchedUsername = await getUsernameFromToken();
+        setUsername(fetchedUsername || 'User'); 
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  const handleLogout = async () => {
+    await removeToken(); 
+    setJwtToken(null); 
+    setUsername(''); 
+    router.push('/login');
+  };
 
   return (
     <View style={styles.navbar}>
@@ -11,9 +35,18 @@ const Navbar = () => {
         Blog App
       </Text>
       <View style={styles.navItems}>
-      <TouchableOpacity style={styles.button} onPress={() => router.push('/login')}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
+        {jwtToken ? (
+          <>
+            <Text style={styles.username}>Welcome, {username}!</Text>
+            <TouchableOpacity style={styles.button} onPress={handleLogout}>
+              <Text style={styles.buttonText}>Logout</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <TouchableOpacity style={styles.button} onPress={() => router.push('/login')}>
+            <Text style={styles.buttonText}>Login</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
@@ -36,6 +69,11 @@ const styles = StyleSheet.create({
   navItems: {
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  username: {
+    marginRight: 15,
+    fontSize: 16,
+    fontWeight: 'bold',
   },
   button: {
     paddingHorizontal: 15,

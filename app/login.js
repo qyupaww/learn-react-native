@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
 import { loginUser } from '@/utils/api';
+import {login} from '@/utils/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen = () => {
@@ -16,17 +17,12 @@ const LoginScreen = () => {
     }
 
     try {
-      const response = await loginUser(identifier, password);
+      const response = await login(identifier, password);
 
-      // Simpan token ke AsyncStorage
-      if (response.token) {
-        await AsyncStorage.setItem('jwt_token', response.token);
-        console.log('Token saved:', response.token);
+      if (response) {
         Alert.alert('Success', 'Login successful!');
-        router.push('/index'); // Arahkan ke halaman utama setelah berhasil login
-      } else {
-        throw new Error('Token not received from server.');
-      }
+        router.push('/'); 
+      }  
     } catch (error) {
       console.error('Login error:', error.message || error);
       Alert.alert('Error', error.message || 'Something went wrong during login.');
