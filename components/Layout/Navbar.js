@@ -41,6 +41,9 @@ const Navbar = () => {
             <TouchableOpacity style={styles.button} onPress={handleLogout}>
               <Text style={styles.buttonText}>Logout</Text>
             </TouchableOpacity>
+            <TouchableOpacity onPress={() => router.push('/details/create')} style={styles.popupItem}>
+            <Text style={styles.popupText}>Buat Article</Text>
+          </TouchableOpacity>
           </>
         ) : (
           <TouchableOpacity style={styles.button} onPress={() => router.push('/login')}>

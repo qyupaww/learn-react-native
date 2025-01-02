@@ -1,20 +1,69 @@
 import { View, Text, StyleSheet, Image } from 'react-native';
 import { useRouter } from 'expo-router';
+import { useState, useEffect } from 'react';
+import { getProfile } from '/utils/auth';
 
-export default function Bebas() {
+export default function UserProfile() {
   const router = useRouter();
+  const [userData, setUserData] = useState({
+    name: '',
+    email: ''
+  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    fetchUserProfile();
+  }, []);
+
+  const fetchUserProfile = async () => {
+    try {
+      const profileData = await getProfile();
+      if (profileData) {
+        setUserData({
+          name: profileData.name || 'No Name',
+          email: profileData.email || 'No Email'
+        });
+      } else {
+        setError('Failed to load profile data');
+      }
+    } catch (err) {
+      setError('Error loading profile');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.content}>
+        <Text>Loading profile...</Text>
+      </View>
+    );
+  }
+
+  if (error) {
+    return (
+      <View style={styles.content}>
+        <Text style={styles.errorText}>{error}</Text>
+      </View>
+    );
+  }
 
   return (
-
-      <View style={styles.content}>
-        <View style={styles.imageContainer}>
-          <Image
-            source={require('@/assets/EULA.jpg')}
-            style={styles.circularImage}
-          />
-        </View>
+    <View style={styles.content}>
+      <View style={styles.imageContainer}>
+        <Image
+          source={require('@/assets/EULA.jpg')}
+          style={styles.circularImage}
+        />
       </View>
-    
+      
+      <View style={styles.userInfoContainer}>
+        <Text style={styles.name}>{userData.name}</Text>
+        <Text style={styles.email}>{userData.email}</Text>
+      </View>
+    </View>
   );
 }
 
@@ -41,16 +90,23 @@ const styles = StyleSheet.create({
     width: 200,
     height: 200,
     borderRadius: 100,
-    backgroundColor: '#ddd', 
+    backgroundColor: '#ddd',
   },
-  title: {
+  userInfoContainer: {
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  name: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
   },
-  description: {
+  email: {
     fontSize: 16,
-    textAlign: 'center',
     color: '#666',
   },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+  }
 });

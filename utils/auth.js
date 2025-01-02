@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_BASE_URL = 'https://0cba-180-251-235-117.ngrok-free.app/api';
+const API_BASE_URL = 'https://d35b-180-251-235-145.ngrok-free.app/api';
 
 /**
  * Simpan token JWT ke AsyncStorage

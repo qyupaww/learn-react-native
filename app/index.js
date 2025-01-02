@@ -38,7 +38,7 @@ const Index = () => {
           style={styles.imageButton}
           onPress={() => router.push("/image")}
         >
-          <Text style={styles.imageButtonText}>Image</Text>
+          <Text style={styles.imageButtonText}>Profil</Text>
         </TouchableOpacity>
       </View>
       <ScrollView>
@@ -67,7 +67,7 @@ const styles = StyleSheet.create({
     padding: 15,
     backgroundColor: '#fff',
     flexDirection: 'row',
-    justifyContent: 'space-between', // Adjust layout of buttons
+    justifyContent: 'space-between',
   },
   aboutButton: {
     backgroundColor: '#007AFF',

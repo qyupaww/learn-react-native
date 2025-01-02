@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { loginUser } from '@/utils/api';
 import {login} from '@/utils/auth';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -34,11 +33,11 @@ const LoginScreen = () => {
       <Text style={styles.title}>Login</Text>
       <TextInput
         style={styles.input}
-        placeholder="identifier"
+        placeholder="Email"
         value={identifier}
         onChangeText={setIdentifier}
         keyboardType="identifier-address"
-        autoCapitalize="none" // Menonaktifkan kapitalisasi otomatis
+        autoCapitalize="none"
       />
       <TextInput
         style={styles.input}
