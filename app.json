@@ -19,7 +19,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.qyupaww.reactn"
     },
     "web": {
       "favicon": "./assets/favicon.png",
@@ -28,6 +29,14 @@
     "plugins": [
       "expo-router"
     ],
-    "scheme": "donezo"
+    "scheme": "donezo",
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "26667de0-ac05-4787-af10-5bab2dcd16f0"
+      }
+    }
   }
 }

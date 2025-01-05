@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const API_BASE_URL = 'https://d35b-180-251-235-145.ngrok-free.app/api';
+const API_BASE_URL = "http://192.168.1.6:8000/api";
 
 /**
  * Simpan token JWT ke AsyncStorage
@@ -74,7 +74,6 @@ export const getUsernameFromToken = async () => {
   }
 };
 
-
 /**
  * Hapus token JWT dari AsyncStorage
  */
@@ -96,15 +95,14 @@ export const removeToken = async () => {
 export const login = async (identifier, password) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/auth/login`, {
-      identifier, // Bisa email atau username
+      identifier, // email atau username
       password,
     });
 
-    const { token, user } = response.data;
+    const { data } = response.data;
 
-    if (token) {
-      await saveToken(token); // Simpan token di AsyncStorage
-      await saveUser(user); // Simpan data user di AsyncStorage
+    if (data.token) {
+      await saveToken(data.token); // Simpan token di AsyncStorage
       console.log('Login successful!');
       return true;
     } else {
@@ -138,11 +136,11 @@ export const register = async (name, username, email, password) => {
       console.log('Registration successful!');
       return true;
     } else {
-      console.error('Registration failed:', response.data.message);
+      console.error('Registration failed:', response.data.data.message);
       return false;
     }
   } catch (error) {
-    console.error('Registration error:', error.response?.data || error.message);
+    console.error('Registration error:', error.response?.data?.data || error.message);
     return false;
   }
 };
@@ -177,8 +175,8 @@ export const getProfile = async () => {
         Authorization: `Bearer ${token}`,
       },
     });
-
-    return response.data;
+    const { data } = response.data;
+    return data;
   } catch (error) {
     console.error('Failed to get profile:', error);
     return null;

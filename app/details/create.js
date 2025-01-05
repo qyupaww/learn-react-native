@@ -74,7 +74,7 @@ const CreateArticle = () => {
     formData.append('title', title);
     formData.append('description', description);
     formData.append('body_html', bodyHtml);
-    formData.append('tags', JSON.stringify(tags.split(',')));
+    tags.split(',').forEach((tag) => formData.append('tags[]', tag));
 
     if (image) {
       const filename = image.uri.split('/').pop();
